@@ -35,13 +35,7 @@ DOCKER_IMAGE_NAME=("$1")
 
 if [ "$#" -eq 1 ]; then
     COMMAND="bash"
-    if [[ $(uname) == "Darwin" ]]; then
-        # Docker's host networking driver isn't supported on macOS.
-        # Use default bridge network and expose port for jupyter notebook.
-        CI_DOCKER_EXTRA_PARAMS=("-it -p 8888:8888")
-    else
-        CI_DOCKER_EXTRA_PARAMS=("-it --net=host")
-    fi
+    CI_DOCKER_EXTRA_PARAMS=("-it --net=host")
 else
     shift 1
     COMMAND=("$@")
@@ -87,5 +81,5 @@ ${DOCKER_BINARY} run --rm --pid=host\
     ${CUDA_ENV}\
     ${CI_DOCKER_EXTRA_PARAMS[@]} \
     ${DOCKER_IMAGE_NAME}\
-    bash --login /docker/with_the_same_user \
+    bash --login /workspace/docker/with_the_same_user \
     ${COMMAND[@]}
